@@ -29,7 +29,24 @@ function drawMatrix(matrix, offset) {
     });
 }
 
-function update() {
+function playerDrop() {
+    player.pos.y++;
+    dropCounter = 0;
+}
+
+let dropCounter = 0;
+let dropInterval = 1000;
+
+let lastTime = 0;
+function update(time = 0) {
+    const deltaTime = time - lastTime;
+    lastTime = time;
+    
+    dropCounter += deltaTime;
+    if(dropCounter > dropInterval) {
+        playerDrop();
+    }
+
     draw();
     requestAnimationFrame(update);
 }
@@ -38,5 +55,15 @@ const player = {
     pos: {x: 5, y: 5},
     matrix: matrix,
 }
+
+document.addEventListener('keydown', event => {
+    if(event.keyCode === 37) {
+        player.pos.x--;
+    } else if(event.keyCode === 39) {
+        player.pos.x++;
+    } else if(event.keyCode === 40) {
+        playerDrop();
+    }
+});
 
 update();
