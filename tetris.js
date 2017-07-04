@@ -14,6 +14,7 @@ function collide(arena, player) {
   const [m, o] = [player.matrix, player.pos];
   for(let y = 0; y < m.length; ++y) {
     for(let x = 0; x < m[y].length; ++x) {
+      // if the tetris element reaches the end of the arena or there is already an element, return true
       if(m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
         return true;
       }
@@ -35,6 +36,7 @@ function draw() {
   context.fillStyle = '#000';
   context.fillRect(0, 0, canvas.width, canvas.height);
 
+  drawMatrix(arena, {x: 0, y: 0})
   drawMatrix(player.matrix, player.pos);
 }
 
@@ -74,6 +76,14 @@ function playerDrop() {
   dropCounter = 0;
 }
 
+// hinders the tetris element from leaving the canvas on the sides
+function playerMove(direction) {
+  player.pos.x += direction;
+  if(collide(arena, player)) {
+    player.pos.x -= direction;
+  }
+}
+
 let dropCounter = 0;
 let dropInterval = 1000; // each second the tetris element falls down
 
@@ -100,9 +110,9 @@ const player = {
 
 document.addEventListener('keydown', event => {
   if(event.keyCode === 37) {
-      player.pos.x--;
+      playerMove(-1);
   } else if(event.keyCode === 39) {
-      player.pos.x++;
+      playerMove(1);
   } else if(event.keyCode === 40) {
       playerDrop();
   }
