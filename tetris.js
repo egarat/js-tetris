@@ -114,7 +114,7 @@ function playerDrop() {
   if(collide(arena, player)) {
     player.pos.y--;
     merge(arena, player);
-    player.pos.y = 0;
+    playerReset();
   }
   dropCounter = 0;
 }
@@ -125,6 +125,14 @@ function playerMove(direction) {
   if(collide(arena, player)) {
     player.pos.x -= direction;
   }
+}
+
+function playerReset() {
+  const pieces = 'ILJOTSZ';
+  player.matrix = createPiece(pieces[Math.floor(pieces.length * Math.random())]);
+  player.pos.y = 0;
+  player.pos.x = (Math.floor(arena[0].length / 2)) -
+                 (Math.floor(player.matrix[0].length / 2));
 }
 
 // function to handle the rotation
