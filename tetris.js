@@ -133,6 +133,9 @@ function playerReset() {
   player.pos.y = 0;
   player.pos.x = (Math.floor(arena[0].length / 2)) -
                  (Math.floor(player.matrix[0].length / 2));
+  if(collide(arena, player)) {
+    arena.forEach(row => row.fill(0));
+  }
 }
 
 // function to handle the rotation
