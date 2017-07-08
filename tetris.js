@@ -3,6 +3,21 @@ const context = canvas.getContext('2d');
 
 context.scale(20, 20);
 
+// check for complete rows and remove it from the field and add an empty one on top
+function arenaSweep() {
+  outer: for(let y = arena.length - 1; y > 0; y--) {
+    for(let x = 0; x < arena[y].length; x++) {
+      if(arena[y][x] === 0) {
+        continue outer;
+      }
+    }
+
+    const row = arena.splice(y, 1)[0].fill(0);
+    arena.unshift(row);
+    y++;
+  }
+}
+
 // checks for collision of the tetris element
 function collide(arena, player) {
   const [m, o] = [player.matrix, player.pos];
@@ -115,6 +130,7 @@ function playerDrop() {
     player.pos.y--;
     merge(arena, player);
     playerReset();
+    arenaSweep();
   }
   dropCounter = 0;
 }
@@ -127,6 +143,7 @@ function playerMove(direction) {
   }
 }
 
+// function to get the next tetris element or reset the game board
 function playerReset() {
   const pieces = 'ILJOTSZ';
   player.matrix = createPiece(pieces[Math.floor(pieces.length * Math.random())]);
